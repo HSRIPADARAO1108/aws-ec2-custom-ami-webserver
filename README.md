@@ -15,7 +15,7 @@ I configured a dedicated **Security Group** to manage traffic:
 * **HTTP (Port 80)**: Open to `0.0.0.0/0` for public web access.
 * **SSH (Port 22)**: Open for administrative management.
 
-![Security Groups](./security_groups.png)
+![Security Groups](./showing_security_groups.png)
 
 ### Phase 3: AMI Snapshot & Validation
 * **AMI Creation**: Created `Ubuntu-Web-Server-V1` from the configured instance to preserve the state.
@@ -27,7 +27,7 @@ I configured a dedicated **Security Group** to manage traffic:
 
 ### Console Verification
 The AWS Console confirms the instance is **Running** and launched from the custom image.
-![Instance Running](./instance_running.png)
+![Instance Running](./showing_ami_instance_running.png)
 
 ### Live Web Result
 The public IPv4 address (`44.204.137.180`) successfully serves the Apache default page, proving the AMI correctly preserved the web server configuration.
