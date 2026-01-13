@@ -1,36 +1,42 @@
-# aws-ec2-custom-ami-webserver
+# AWS Infrastructure: Immutable Web Server via Custom AMI
 
-# AWS Infrastructure: Immutable Web Server using Custom AMIs
+## 1. Project Objective
+This project demonstrates the "Golden Image" strategy in AWS. By creating a custom Amazon Machine Image (AMI), I moved from manual, error-prone server configuration to a consistent, automated deployment model.
 
-## 1. Project Overview
-This project demonstrates the transition from **Manual Server Configuration** to **Automated Infrastructure** using the "Golden Image" strategy. By utilizing Amazon Machine Images (AMI), I eliminated the need to manually configure web servers, ensuring 100% consistency and rapid deployment.
+## 2. Technical Workflow
 
+### Phase 1: Environment Setup
+* **Base OS**: Ubuntu 24.04 LTS.
+* **Stack**: Installed and enabled Apache2.
+* **Hardening**: Updated system packages and configured the web root to ensure immediate service availability upon boot.
 
+### Phase 2: Security & Networking
+I configured a dedicated **Security Group** to manage traffic:
+* **HTTP (Port 80)**: Open to `0.0.0.0/0` for public web access.
+* **SSH (Port 22)**: Open for administrative management.
+
+![Security Groups](./security_groups.png)
+
+### Phase 3: AMI Snapshot & Validation
+* **AMI Creation**: Created `Ubuntu-Web-Server-V1` from the configured instance to preserve the state.
+* **Deployment**: Launched a new `t3.micro` instance using the custom AMI.
+
+![AMI Dashboard](./ami_dashboard.png)
+
+## 3. Evidence of Success
+
+### Console Verification
+The AWS Console confirms the instance is **Running** and launched from the custom image.
+![Instance Running](./instance_running.png)
+
+### Live Web Result
+The public IPv4 address (`44.204.137.180`) successfully serves the Apache default page, proving the AMI correctly preserved the web server configuration.
+![Web Success](./web_success.png)
+
+## 4. Conclusion
+This implementation ensures that every new server added to the infrastructure is a bit-for-bit clone of the "Golden Image," enabling rapid scaling and high reliability.
 
 ---
-
-## 2. What is an AMI? (The Solution)
-An **Amazon Machine Image (AMI)** is a read-only boot disk image used to create a virtual machine in EC2.
-* **The Problem:** Setting up a server manually (installing OS updates, web servers, and code) takes 10-20 minutes and is prone to human error.
-* **The Solution:** I configured a "Golden Instance" once, "froze" it into an AMI, and used that AMI to launch pre-configured clones instantly.
-
----
-
-## 3. Comparison: Manual vs. AMI Deployment
-| Factor | Manual Configuration | AMI (Golden Image) |
-| :--- | :--- | :--- |
-| **Setup Speed** | Slow (15+ mins) | Instant (< 1 min) |
-| **Reliability** | Low (Risk of "Configuration Drift") | High (Bit-for-bit identical) |
-| **Scalability** | Difficult to repeat | Perfect for Auto Scaling Groups |
-
----
-
-## 4. Technical Implementation
-
-### Step 1: Baseline Build
-* Launched a base **Ubuntu 24.04 LTS** instance (`t2.micro`).
-* Connected via SSH and performed system hardening:
-  ```bash
-  sudo apt update && sudo apt upgrade -y
-  sudo apt install apache2 -y
-  sudo systemctl enable apache2
+**Next Steps**: 
+- Implement **Auto Scaling Groups** using this AMI.
+- Automate image updates using **HashiCorp Packer**.
